@@ -16,9 +16,10 @@ export default function PokemonDetails({ pokemon, onClose }) {
 
   if (!pokemon) return null;
 
-  const mainType = pokemon.types[0].name.toLowerCase();
+  const mainType = pokemon.types && pokemon.types.length > 0 
+    ? pokemon.types[0].name.toLowerCase() 
+    : 'normal';
   
-  // Adaptando os stats do JSON do professor para exibição
   const statsList = [
     { label: 'HP', value: pokemon.stats.hp },
     { label: 'Attack', value: pokemon.stats.attack },
@@ -44,7 +45,7 @@ export default function PokemonDetails({ pokemon, onClose }) {
         <div className="detail-content">
           <h2>{pokemon.name}</h2>
           <div className="badges detail-badges">
-            {pokemon.types.map((t) => (
+            {pokemon.types && pokemon.types.map((t) => (
               <span key={t.id} className={`type-badge type-${t.name.toLowerCase()}`}>{t.name}</span>
             ))}
           </div>

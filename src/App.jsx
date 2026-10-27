@@ -3,7 +3,8 @@ import pokedexData from './data/pokedex-data.json';
 import SearchBar from './components/SearchBar';
 import PokemonCard from './components/PokemonCard';
 import PokemonDetails from './components/PokemonDetails';
-import './css/App.css'; // Vamos colocar o CSS global aqui por enquanto
+import './css/App.css';
+import './css/PokemonList.css';
 
 const allTypes = ['Todos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
 

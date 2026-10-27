@@ -1,0 +1,562 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root {
+  color: #172234;
+  background: #f6f8fc;
+  font-family: 'DM Sans', sans-serif;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #d5dbe7 transparent;
+}
+
+/* Layout Geral e Header */
+.app-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff 0, #f7f9fc 32rem);
+}
+
+.site-header {
+  height: 82px;
+  border-bottom: 1px solid #e9edf4;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-wrap {
+  max-width: 1240px;
+  height: 100%;
+  padding: 0 28px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.brand {
+  color: #172234;
+  text-decoration: none;
+  font: 800 24px 'Manrope', sans-serif;
+  letter-spacing: -0.8px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-ball {
+  width: 29px;
+  height: 29px;
+  display: block;
+  border: 3px solid #ef4455;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(#ef4455 0 44%, #233047 44% 56%, white 56%);
+}
+
+.brand-ball i {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #233047;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: #202c40;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+main {
+  max-width: 1240px;
+  margin: auto;
+  padding: 0 28px 70px;
+}
+
+/* Seção de Intro */
+.intro {
+  padding: 56px 0 40px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.eyebrow {
+  margin: 0 0 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4455;
+}
+
+.intro h1 {
+  margin: 0;
+  font: 800 clamp(36px, 5vw, 58px) / 1.05 'Manrope', sans-serif;
+  letter-spacing: -2.6px;
+  color: #162236;
+}
+
+.intro h1 span {
+  color: #ef4455;
+}
+
+.intro-copy {
+  margin: 17px 0 0;
+  color: #758094;
+  font-size: 16px;
+}
+
+.collection-count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 17px;
+  border-left: 1px solid #dfe4ec;
+}
+
+.collection-count strong {
+  font: 800 30px 'Manrope', sans-serif;
+  color: #172234;
+}
+
+.collection-count span {
+  color: #7b8595;
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  line-height: 1.4;
+}
+
+/* Filtros */
+.filter-section {
+  border-top: 1px solid #e8ecf2;
+  border-bottom: 1px solid #e8ecf2;
+  margin-bottom: 34px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding: 16px 1px;
+}
+
+.filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  flex: 0 0 auto;
+  border: 1px solid #e1e6ed;
+  background: white;
+  color: #667185;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.2s;
+}
+
+.filter-chip:hover {
+  transform: translateY(-1px);
+  border-color: #aeb7c5;
+}
+
+.filter-chip.active {
+  color: white;
+  background: #202c40;
+  border-color: #202c40;
+  box-shadow: 0 5px 14px rgba(32, 44, 64, 0.15);
+}
+
+.chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.results-heading {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.results-heading h2 {
+  margin: 0;
+  font: 700 20px 'Manrope', sans-serif;
+  letter-spacing: -0.4px;
+}
+
+.results-heading span {
+  color: #8a94a5;
+  font-size: 12px;
+}
+
+/* Tags de Tipo (Cores globais das pílulas) */
+.type-badge {
+  color: white;
+  padding: 5px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  font-size: 8px;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.type-grass {
+  background: #61ae70;
+}
+
+.type-poison {
+  background: #9a6bb5;
+}
+
+.type-fire {
+  background: #f1794c;
+}
+
+.type-water {
+  background: #559bd1;
+}
+
+.type-electric {
+  background: #e1b72d;
+}
+
+.type-ghost {
+  background: #7265a8;
+}
+
+.type-normal {
+  background: #8e9087;
+}
+
+.type-psychic {
+  background: #e56683;
+}
+
+.type-fighting {
+  background: #bf5a4d;
+}
+
+.type-bug {
+  background: #92a119;
+}
+
+.type-ground {
+  background: #d0b155;
+}
+
+.type-rock {
+  background: #bba358;
+}
+
+.type-dragon {
+  background: #6650eb;
+}
+
+.type-ice {
+  background: #63d1cd;
+}
+
+.type-flying {
+  background: #a291eb;
+}
+
+.type-steel {
+  background: #aaaabb;
+}
+
+/* Modal de Detalhes (PokemonDetails) */
+.panel-open {
+  overflow: hidden;
+}
+
+.modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(17, 25, 39, 0.46);
+  backdrop-filter: blur(4px);
+  animation: fade-in 0.25s ease;
+}
+
+.detail-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(520px, 100%);
+  overflow-y: auto;
+  box-shadow: -22px 0 60px rgba(20, 28, 40, 0.2);
+  animation: slide-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.close-button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  display: grid;
+  place-items: center;
+  transition: 0.2s;
+}
+
+.close-button:hover {
+  background: white;
+  transform: rotate(90deg);
+}
+
+.close-button svg {
+  width: 20px;
+  fill: none;
+  stroke: #293447;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.detail-visual {
+  height: 43%;
+  min-height: 330px;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-number {
+  position: absolute;
+  left: 28px;
+  top: 27px;
+  color: rgba(33, 45, 62, 0.52);
+  font: 700 13px 'Manrope', sans-serif;
+  letter-spacing: 1.2px;
+}
+
+.detail-orb {
+  width: 330px;
+  height: 330px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.detail-visual img {
+  position: absolute;
+  z-index: 1;
+  width: 310px;
+  height: 310px;
+  object-fit: contain;
+  left: 50%;
+  bottom: -13px;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 18px 13px rgba(38, 48, 63, 0.18));
+}
+
+.detail-content {
+  min-height: 57%;
+  background: white;
+  border-radius: 30px 30px 0 0;
+  position: relative;
+  z-index: 2;
+  padding: 33px 35px 40px;
+}
+
+.detail-content h2 {
+  margin: 0 0 12px;
+  color: #172234;
+  font: 800 38px 'Manrope', sans-serif;
+  letter-spacing: -1.5px;
+}
+
+.detail-badges .type-badge {
+  padding: 6px 12px;
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf0f4;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.stats-header h3 {
+  margin: 0;
+  font: 700 15px 'Manrope', sans-serif;
+}
+
+.stats-header span {
+  color: #8993a3;
+  font-size: 11px;
+}
+
+.stats-list {
+  display: grid;
+  gap: 12px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 57px 28px 1fr;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.stat-row > span {
+  color: #8490a1;
+}
+
+.stat-row strong {
+  color: #2a3649;
+  text-align: right;
+  font-size: 11px;
+}
+
+.stat-track {
+  height: 6px;
+  overflow: hidden;
+  background: #edf0f4;
+  border-radius: 99px;
+}
+
+.stat-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ef4455, #ff7f6f);
+  animation: grow 0.7s ease-out;
+  transform-origin: left;
+}
+
+/* Animações */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .nav-wrap {
+    gap: 24px;
+  }
+
+  .profile-button {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .site-header {
+    height: auto;
+  }
+
+  .nav-wrap {
+    padding: 16px 18px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+
+  .brand-ball {
+    width: 25px;
+    height: 25px;
+  }
+
+  main {
+    padding: 0 18px 50px;
+  }
+
+  .intro {
+    padding: 38px 0 30px;
+  }
+
+  .intro h1 {
+    font-size: 40px;
+    letter-spacing: -2px;
+  }
+
+  .intro-copy {
+    font-size: 14px;
+  }
+
+  .collection-count {
+    display: none;
+  }
+
+  .type-badge {
+    padding: 4px 7px;
+    font-size: 7px;
+  }
+
+  .detail-content {
+    padding: 28px 24px 35px;
+  }
+}
