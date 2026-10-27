@@ -1,122 +1,91 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useMemo, useState } from 'react';
+import pokedexData from './data/pokedex-data.json';
+import SearchBar from './components/SearchBar';
+import PokemonCard from './components/PokemonCard';
+import PokemonDetails from './components/PokemonDetails';
+import './css/App.css'; // Vamos colocar o CSS global aqui por enquanto
 
-function App() {
-  const [count, setCount] = useState(0)
+const allTypes = ['Todos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
+
+export default function App() {
+  const [query, setQuery] = useState('');
+  const [activeType, setActiveType] = useState('Todos');
+  const [selected, setSelected] = useState(null);
+
+  const visiblePokemon = useMemo(() => {
+    const normalized = query.trim().toLowerCase().replace(/^#/, '');
+    return pokedexData.pokemon.filter((item) => {
+      const matchesType = activeType === 'Todos' || item.types.some(t => t.name === activeType);
+      const matchesSearch = !normalized || item.name.toLowerCase().includes(normalized) || String(item.id).includes(normalized);
+      return matchesType && matchesSearch;
+    });
+  }, [activeType, query]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-shell">
+      <header className="site-header">
+        <nav className="nav-wrap" aria-label="Navegação principal">
+          <a className="brand" href="#">
+            <span className="brand-ball"><i /></span> Pokédex
+          </a>
+          <SearchBar query={query} setQuery={setQuery} />
+          <button className="profile-button">TR</button>
+        </nav>
+      </header>
 
-      <div className="ticks"></div>
+      <main>
+        <section className="intro">
+          <div>
+            <p className="eyebrow">Pokédex Nacional</p>
+            <h1>Descubra seus <span>favoritos.</span></h1>
+            <p className="intro-copy">Explore Pokémon, seus tipos, habilidades e atributos.</p>
+          </div>
+          <div className="collection-count">
+            <strong>{pokedexData.pokemon.length}</strong>
+            <span>Pokémon<br />na base</span>
+          </div>
+        </section>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <section className="filter-section">
+          <div className="filter-row">
+            {allTypes.map((type) => (
+              <button
+                key={type}
+                className={`filter-chip ${activeType === type ? 'active' : ''}`}
+                onClick={() => setActiveType(type)}
+              >
+                {type !== 'Todos' && <i className={`chip-dot type-${type.toLowerCase()}`} />}
+                {type}
+              </button>
+            ))}
+          </div>
+        </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <section className="content">
+          <div className="results-heading">
+            <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : `Pokémon tipo ${activeType}`}</h2>
+            <span>{visiblePokemon.length} resultados</span>
+          </div>
+
+          {visiblePokemon.length ? (
+            <div className="pokemon-grid">
+              {visiblePokemon.map((item) => (
+                <PokemonCard key={item.id} pokemon={item} onClick={() => setSelected(item)} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <span className="empty-ball"><i /></span>
+              <h3>Nenhum Pokémon encontrado</h3>
+              <p>Tente outro nome, ID ou filtro de tipo.</p>
+              <button onClick={() => { setQuery(''); setActiveType('Todos'); }}>Limpar filtros</button>
+            </div>
+          )}
+        </section>
+      </main>
+
+      {/* Renderiza o modal apenas se houver um Pokémon selecionado */}
+      <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
+    </div>
+  );
 }
-
-export default App
