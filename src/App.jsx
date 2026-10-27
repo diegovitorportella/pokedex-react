@@ -83,10 +83,11 @@ export default function App() {
             </div>
           )}
         </section>
-      </main>
-
+</main>
       {/* Renderiza o modal apenas se houver um Pokémon selecionado */}
-      <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
+      {selected && (
+        <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
