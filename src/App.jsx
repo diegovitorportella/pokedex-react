@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import pokedexData from './data/pokedex-data.json';
 import SearchBar from './components/SearchBar';
 import PokemonCard from './components/PokemonCard';
@@ -7,22 +7,49 @@ import TrainerList from './components/TrainerList';
 import './css/App.css';
 import './css/PokemonList.css';
 
-const allTypes = ['Todos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
+// Adicionamos 'Favoritos' como uma opção de filtro inicial
+const allTypes = ['Todos', 'Favoritos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
 
 export default function App() {
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState('Todos');
   const [selected, setSelected] = useState(null);
   const [showTrainers, setShowTrainers] = useState(false);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('pokedex-favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pokedex-favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (id) => {
+    setFavorites(prev => 
+      prev.includes(id) 
+        ? prev.filter(favId => favId !== id) 
+        : [...prev, id]
+    );
+  };
 
   const visiblePokemon = useMemo(() => {
     const normalized = query.trim().toLowerCase().replace(/^#/, '');
+    
     return pokedexData.pokemon.filter((item) => {
-      const matchesType = activeType === 'Todos' || item.types.some(t => t.name === activeType);
+      let matchesType = false;
+      if (activeType === 'Todos') {
+        matchesType = true;
+      } else if (activeType === 'Favoritos') {
+        matchesType = favorites.includes(item.id);
+      } else {
+        matchesType = item.types.some(t => t.name === activeType);
+      }
+      
       const matchesSearch = !normalized || item.name.toLowerCase().includes(normalized) || String(item.id).includes(normalized);
+      
       return matchesType && matchesSearch;
     });
-  }, [activeType, query]);
+  }, [activeType, query, favorites]);
 
   return (
     <div className="app-shell">
@@ -31,10 +58,7 @@ export default function App() {
           <a className="brand" href="#">
             <span className="brand-ball"><i /></span> Pokédex
           </a>
-          
           <SearchBar query={query} setQuery={setQuery} />
-          
-          {/* Botão para abrir o modal de treinadores */}
           <button className="profile-button" onClick={() => setShowTrainers(true)} title="Ver Treinadores">
             TR
           </button>
@@ -62,7 +86,8 @@ export default function App() {
                 className={`filter-chip ${activeType === type ? 'active' : ''}`}
                 onClick={() => setActiveType(type)}
               >
-                {type !== 'Todos' && <i className={`chip-dot type-${type.toLowerCase()}`} />}
+                {type !== 'Todos' && type !== 'Favoritos' && <i className={`chip-dot type-${type.toLowerCase()}`} />}
+                {type === 'Favoritos' && <span style={{marginRight: '4px'}}>⭐</span>}
                 {type}
               </button>
             ))}
@@ -71,14 +96,20 @@ export default function App() {
 
         <section className="content">
           <div className="results-heading">
-            <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : `Pokémon tipo ${activeType}`}</h2>
+            <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : activeType === 'Favoritos' ? 'Seus Favoritos' : `Pokémon tipo ${activeType}`}</h2>
             <span>{visiblePokemon.length} resultados</span>
           </div>
 
           {visiblePokemon.length ? (
             <div className="pokemon-grid">
               {visiblePokemon.map((item) => (
-                <PokemonCard key={item.id} pokemon={item} onClick={() => setSelected(item)} />
+                <PokemonCard 
+                  key={item.id} 
+                  pokemon={item} 
+                  onClick={() => setSelected(item)}
+                  isFavorite={favorites.includes(item.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
               ))}
             </div>
           ) : (
@@ -92,8 +123,6 @@ export default function App() {
         </section>
       </main>
 
-      {/* Modais com Renderização Condicional */}
-      
       {selected && (
         <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
       )}
@@ -105,7 +134,6 @@ export default function App() {
           onClose={() => setShowTrainers(false)} 
         />
       )}
-      
     </div>
   );
 }

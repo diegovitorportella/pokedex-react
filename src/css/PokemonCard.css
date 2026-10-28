@@ -21,6 +21,28 @@
   outline-offset: 3px;
 }
 
+.favorite-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.favorite-btn:hover {
+  background: white;
+  transform: scale(1.15);
+}
+
 .card-id {
   position: absolute;
   top: 18px;
@@ -102,112 +124,34 @@
 }
 
 /* Fundo dos Cards por Tipo */
-.card-grass {
-  background: linear-gradient(145deg, #e5f7e8, #caebd2);
-}
-
-.card-fire {
-  background: linear-gradient(145deg, #fff0df, #ffd7bc);
-}
-
-.card-water {
-  background: linear-gradient(145deg, #e6f3ff, #cce5fa);
-}
-
-.card-electric {
-  background: linear-gradient(145deg, #fff8d7, #f9e99a);
-}
-
-.card-ghost {
-  background: linear-gradient(145deg, #ede9fa, #d8d1ed);
-}
-
-.card-normal {
-  background: linear-gradient(145deg, #f2f1eb, #e2e0d7);
-}
-
-.card-psychic {
-  background: linear-gradient(145deg, #fde8ee, #f7ccd8);
-}
-
-.card-bug {
-  background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
-}
-
-.card-poison {
-  background: linear-gradient(145deg, #f3e5f5, #e1bee7);
-}
-
-.card-ground {
-  background: linear-gradient(145deg, #efebe9, #d7ccc8);
-}
-
-.card-rock {
-  background: linear-gradient(145deg, #e0e0e0, #bdbdbd);
-}
-
-.card-fighting {
-  background: linear-gradient(145deg, #ffebee, #ffcdd2);
-}
-
-.card-dragon {
-  background: linear-gradient(145deg, #ede7f6, #d1c4e9);
-}
-
-.card-ice {
-  background: linear-gradient(145deg, #e0f7fa, #b2ebf2);
-}
-
-.card-flying {
-  background: linear-gradient(145deg, #e3f2fd, #bbdefb);
-}
+.card-grass { background: linear-gradient(145deg, #e5f7e8, #caebd2); }
+.card-fire { background: linear-gradient(145deg, #fff0df, #ffd7bc); }
+.card-water { background: linear-gradient(145deg, #e6f3ff, #cce5fa); }
+.card-electric { background: linear-gradient(145deg, #fff8d7, #f9e99a); }
+.card-ghost { background: linear-gradient(145deg, #ede9fa, #d8d1ed); }
+.card-normal { background: linear-gradient(145deg, #f2f1eb, #e2e0d7); }
+.card-psychic { background: linear-gradient(145deg, #fde8ee, #f7ccd8); }
+.card-bug { background: linear-gradient(145deg, #e8f5e9, #c8e6c9); }
+.card-poison { background: linear-gradient(145deg, #f3e5f5, #e1bee7); }
+.card-ground { background: linear-gradient(145deg, #efebe9, #d7ccc8); }
+.card-rock { background: linear-gradient(145deg, #e0e0e0, #bdbdbd); }
+.card-fighting { background: linear-gradient(145deg, #ffebee, #ffcdd2); }
+.card-dragon { background: linear-gradient(145deg, #ede7f6, #d1c4e9); }
+.card-ice { background: linear-gradient(145deg, #e0f7fa, #b2ebf2); }
+.card-flying { background: linear-gradient(145deg, #e3f2fd, #bbdefb); }
 
 @media (max-width: 680px) {
-  .pokemon-card {
-    min-height: 260px;
-    padding: 13px;
-    border-radius: 18px;
-  }
-
-  .card-id {
-    top: 14px;
-    right: 14px;
-  }
-
-  .card-orb {
-    width: 150px;
-    height: 150px;
-    top: 38px;
-  }
-
-  .pokemon-card img {
-    width: 145px;
-    height: 145px;
-    margin-top: 25px;
-  }
-
-  .card-content {
-    left: 14px;
-    right: 14px;
-    bottom: 14px;
-  }
-
-  .card-content > strong {
-    font-size: 17px;
-  }
-
-  .card-arrow {
-    display: none;
-  }
+  .pokemon-card { min-height: 260px; padding: 13px; border-radius: 18px; }
+  .card-id { top: 14px; right: 14px; }
+  .favorite-btn { top: 10px; left: 10px; width: 26px; height: 26px; font-size: 14px; }
+  .card-orb { width: 150px; height: 150px; top: 38px; }
+  .pokemon-card img { width: 145px; height: 145px; margin-top: 25px; }
+  .card-content { left: 14px; right: 14px; bottom: 14px; }
+  .card-content > strong { font-size: 17px; }
+  .card-arrow { display: none; }
 }
 
 @media (max-width: 390px) {
-  .pokemon-card {
-    min-height: 295px;
-  }
-
-  .pokemon-card img {
-    width: 180px;
-    height: 180px;
-  }
+  .pokemon-card { min-height: 295px; }
+  .pokemon-card img { width: 180px; height: 180px; }
 }
