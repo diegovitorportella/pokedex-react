@@ -1,3 +1,4 @@
+/* Cartão do Pokémon */
 .pokemon-card {
   min-height: 318px;
   border: 0;
@@ -47,7 +48,7 @@
   transform: scale(1.15);
 }
 
-/* Identificação e imagem */
+/* Identificação do Pokémon */
 .card-id {
   position: absolute;
   top: 18px;
@@ -59,34 +60,37 @@
   z-index: 2;
 }
 
+/* Círculo decorativo */
 .card-orb {
   position: absolute;
-  width: 210px;
-  height: 210px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   background: var(--orb-bg);
-  top: 36px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* Imagem do Pokémon */
 .pokemon-card img {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  display: block;
-  margin: 20px auto 0;
-  width: 188px;
-  height: 188px;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 175px;
+  height: 175px;
   object-fit: contain;
   filter: drop-shadow(0 14px 10px rgba(0, 0, 0, 0.2));
   transition: transform 0.25s;
 }
 
 .pokemon-card:hover img {
-  transform: scale(1.06) rotate(-2deg);
+  transform: translateX(-50%) scale(1.1) rotate(-2deg);
 }
 
-/* Conteúdo do card */
+/* Conteúdo do cartão */
 .card-content {
   position: absolute;
   left: 19px;
@@ -108,13 +112,14 @@ body.dark .card-content > strong {
   color: #fff;
 }
 
+/* Tipos do Pokémon */
 .badges {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-/* Seta de navegação */
+/* Seta do cartão */
 .card-arrow {
   position: absolute;
   right: 18px;
@@ -136,7 +141,7 @@ body.dark .card-content > strong {
   transform: rotate(45deg);
 }
 
-/* Cores dos cards por tipo */
+/* Gradientes dos tipos — tema claro */
 .card-grass {
   background: linear-gradient(145deg, #e5f7e8, #caebd2);
 }
@@ -197,7 +202,7 @@ body.dark .card-content > strong {
   background: linear-gradient(145deg, #e3f2fd, #bbdefb);
 }
 
-/* Cores dos cards no tema escuro */
+/* Gradientes dos tipos — tema escuro */
 body.dark .card-grass {
   background: linear-gradient(145deg, #2a4a33, #1e3625);
 }
@@ -258,7 +263,7 @@ body.dark .card-flying {
   background: linear-gradient(145deg, #2d3b54, #1d273d);
 }
 
-/* Responsividade para dispositivos móveis */
+/* Responsividade — dispositivos móveis */
 @media (max-width: 680px) {
   .pokemon-card {
     min-height: 260px;
@@ -280,15 +285,15 @@ body.dark .card-flying {
   }
 
   .card-orb {
-    width: 150px;
-    height: 150px;
-    top: 38px;
+    width: 140px;
+    height: 140px;
+    top: 35px;
   }
 
   .pokemon-card img {
-    width: 145px;
-    height: 145px;
-    margin-top: 25px;
+    width: 135px;
+    height: 135px;
+    top: 25px;
   }
 
   .card-content {
@@ -312,8 +317,15 @@ body.dark .card-flying {
     min-height: 295px;
   }
 
+  .card-orb {
+    width: 160px;
+    height: 160px;
+    top: 40px;
+  }
+
   .pokemon-card img {
-    width: 180px;
-    height: 180px;
+    width: 155px;
+    height: 155px;
+    top: 30px;
   }
 }
