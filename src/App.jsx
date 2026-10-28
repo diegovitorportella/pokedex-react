@@ -15,7 +15,10 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [showTrainers, setShowTrainers] = useState(false);
   const [sortBy, setSortBy] = useState('id');
-  
+
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animState, setAnimState] = useState('shaking');
+
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('pokedex-favorites');
     return saved ? JSON.parse(saved) : [];
@@ -41,16 +44,35 @@ export default function App() {
   }, [darkMode]);
 
   const toggleFavorite = (id) => {
-    setFavorites(prev => 
-      prev.includes(id) 
-        ? prev.filter(favId => favId !== id) 
+    setFavorites(prev =>
+      prev.includes(id)
+        ? prev.filter(favId => favId !== id)
         : [...prev, id]
     );
   };
 
+  const handleRandomPokemon = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setAnimState('shaking');
+
+    const randomIndex = Math.floor(Math.random() * pokedexData.pokemon.length);
+    const randomPoke = pokedexData.pokemon[randomIndex];
+
+    setTimeout(() => {
+      setAnimState('open');
+      setTimeout(() => {
+        setSelected(randomPoke);
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 350);
+      }, 250);
+    }, 1200);
+  };
+
   const visiblePokemon = useMemo(() => {
     const normalized = query.trim().toLowerCase().replace(/^#/, '');
-    
+
     const filtered = pokedexData.pokemon.filter((item) => {
       let matchesType = false;
       if (activeType === 'Todos') {
@@ -60,9 +82,9 @@ export default function App() {
       } else {
         matchesType = item.types.some(t => t.name === activeType);
       }
-      
+
       const matchesSearch = !normalized || item.name.toLowerCase().includes(normalized) || String(item.id).includes(normalized);
-      
+
       return matchesType && matchesSearch;
     });
 
@@ -83,15 +105,25 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      {isAnimating && (
+        <div className={`random-anim-overlay ${animState === 'open' ? 'fade-out' : ''}`}>
+          <div className={`pokeball-anim ${animState === 'open' ? 'open' : ''}`}>
+            <div className="pokeball-half"></div>
+            <div className="pokeball-half pokeball-bottom"></div>
+            <div className="pokeball-button"></div>
+          </div>
+        </div>
+      )}
+
       <header className="site-header">
         <nav className="nav-wrap" aria-label="Navegação principal">
           <a className="brand" href="#">
             <span className="brand-ball"><i /></span> Pokédex
           </a>
           <SearchBar query={query} setQuery={setQuery} />
-          
-          <button 
-            className="theme-toggle" 
+
+          <button
+            className="theme-toggle"
             onClick={() => setDarkMode(!darkMode)}
             title="Alternar Tema"
             style={{ color: 'var(--text-main)' }}
@@ -114,7 +146,7 @@ export default function App() {
               </svg>
             )}
           </button>
-          
+
           <button className="profile-button" onClick={() => setShowTrainers(true)} title="Ver Treinadores">
             TR
           </button>
@@ -157,11 +189,15 @@ export default function App() {
         <section className="content">
           <div className="results-heading">
             <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : activeType === 'Favoritos' ? 'Seus Favoritos' : `Pokémon tipo ${activeType}`}</h2>
-            
+
             <div className="results-actions">
-              <select 
-                className="sort-select" 
-                value={sortBy} 
+              <button className="random-btn" onClick={handleRandomPokemon} title="Sortear Pokémon">
+                🎲 Aleatório
+              </button>
+
+              <select
+                className="sort-select"
+                value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 aria-label="Ordenar por"
               >
@@ -181,9 +217,9 @@ export default function App() {
           {visiblePokemon.length ? (
             <div className="pokemon-grid">
               {visiblePokemon.map((item) => (
-                <PokemonCard 
-                  key={item.id} 
-                  pokemon={item} 
+                <PokemonCard
+                  key={item.id}
+                  pokemon={item}
                   onClick={() => setSelected(item)}
                   isFavorite={favorites.includes(item.id)}
                   onToggleFavorite={toggleFavorite}
@@ -206,10 +242,10 @@ export default function App() {
       )}
 
       {showTrainers && (
-        <TrainerList 
-          trainers={pokedexData.trainers} 
-          pokemonList={pokedexData.pokemon} 
-          onClose={() => setShowTrainers(false)} 
+        <TrainerList
+          trainers={pokedexData.trainers}
+          pokemonList={pokedexData.pokemon}
+          onClose={() => setShowTrainers(false)}
         />
       )}
     </div>

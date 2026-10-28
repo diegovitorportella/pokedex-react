@@ -57,7 +57,6 @@ button {
   scrollbar-color: var(--border-color) transparent; 
 }
 
-/* Layout Geral e Header */
 .app-shell {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--bg-gradient-top) 0, var(--bg-gradient-bottom) 32rem);
@@ -149,7 +148,6 @@ main {
   padding: 0 28px 70px; 
 }
 
-/* Seção Intro */
 .intro { 
   padding: 56px 0 40px; 
   display: flex; 
@@ -206,7 +204,6 @@ main {
   line-height: 1.4; 
 }
 
-/* Filtros */
 .filter-section { 
   border-top: 1px solid var(--border-color); 
   border-bottom: 1px solid var(--border-color); 
@@ -257,7 +254,6 @@ main {
   border-radius: 50%; 
 }
 
-/* Ordenação e Resultados */
 .results-heading { 
   margin-bottom: 20px; 
   display: flex; 
@@ -284,6 +280,25 @@ main {
   gap: 15px; 
 }
 
+.random-btn {
+  background: var(--input-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+  outline: none;
+}
+
+.random-btn:hover {
+  border-color: var(--text-secondary);
+}
+
 .sort-select { 
   background: var(--input-bg); 
   color: var(--text-main); 
@@ -305,7 +320,6 @@ main {
   box-shadow: 0 0 0 3px var(--border-color); 
 }
 
-/* Badges de Tipo */
 .type-badge { 
   color: white; 
   padding: 5px 10px; 
@@ -333,7 +347,6 @@ main {
 .type-flying { background: #a291eb; } 
 .type-steel { background: #aaaabb; }
 
-/* Modal de Detalhes */
 .panel-open { 
   overflow: hidden; 
 }
@@ -511,7 +524,90 @@ main {
   transform-origin: left; 
 }
 
-/* Animações */
+.random-anim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 25, 39, 0.9);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.35s ease;
+}
+
+.random-anim-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pokeball-anim {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  animation: shake-ball 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+.pokeball-half {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  background: #ef4455;
+  border-radius: 120px 120px 0 0;
+  border: 6px solid #222;
+  border-bottom: 3px solid #222;
+  box-sizing: border-box;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+
+.pokeball-bottom {
+  top: 50%;
+  background: #fff;
+  border-radius: 0 0 120px 120px;
+  border-top: 3px solid #222;
+  border-bottom: 6px solid #222;
+}
+
+.pokeball-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border: 6px solid #222;
+  border-radius: 50%;
+  z-index: 10;
+  transition: opacity 0.2s, transform 0.4s ease;
+}
+
+.pokeball-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: #222;
+  border-radius: 50%;
+}
+
+.pokeball-anim.open .pokeball-half:first-child {
+  transform: translateY(-80px);
+  opacity: 0;
+}
+
+.pokeball-anim.open .pokeball-bottom {
+  transform: translateY(80px);
+  opacity: 0;
+}
+
+.pokeball-anim.open .pokeball-button {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(2);
+}
+
 @keyframes slide-in { 
   from { 
     transform: translateX(100%); 
@@ -530,7 +626,17 @@ main {
   } 
 }
 
-/* Responsividade */
+@keyframes shake-ball {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(-20deg); }
+  30% { transform: rotate(20deg); }
+  45% { transform: rotate(-15deg); }
+  60% { transform: rotate(15deg); }
+  75% { transform: rotate(0deg); }
+  85% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); }
+  100% { transform: scale(1); }
+}
+
 @media (max-width: 900px) { 
   .nav-wrap { 
     gap: 24px; 
