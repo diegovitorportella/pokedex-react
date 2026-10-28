@@ -3,6 +3,15 @@ import React, { useEffect } from 'react';
 const padId = (id) => `#${String(id).padStart(3, '0')}`;
 const imageUrl = (id) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`;
 
+const statColors = {
+  'HP': '#DF2140',
+  'Attack': '#FF9C54',
+  'Defense': '#E3C61A',
+  'Sp. Atk': '#559EDF',
+  'Sp. Def': '#66CC81',
+  'Speed': '#F366B9'
+};
+
 export default function PokemonDetails({ pokemon, onClose }) {
   useEffect(() => {
     const closeOnEscape = (event) => event.key === 'Escape' && onClose();
@@ -28,6 +37,7 @@ export default function PokemonDetails({ pokemon, onClose }) {
     { label: 'Sp. Def', value: pokemon.stats.specialDefense },
     { label: 'Speed', value: pokemon.stats.speed },
   ];
+  
   const totalStats = statsList.reduce((acc, curr) => acc + curr.value, 0);
 
   return (
@@ -59,7 +69,10 @@ export default function PokemonDetails({ pokemon, onClose }) {
                 <span>{stat.label}</span>
                 <strong>{stat.value}</strong>
                 <div className="stat-track">
-                  <i style={{ width: `${Math.min((stat.value / 160) * 100, 100)}%` }} />
+                  <i style={{ 
+                    width: `${Math.min((stat.value / 160) * 100, 100)}%`,
+                    background: statColors[stat.label] 
+                  }} />
                 </div>
               </div>
             ))}
