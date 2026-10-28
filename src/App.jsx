@@ -14,6 +14,7 @@ export default function App() {
   const [activeType, setActiveType] = useState('Todos');
   const [selected, setSelected] = useState(null);
   const [showTrainers, setShowTrainers] = useState(false);
+  const [sortBy, setSortBy] = useState('id');
   
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('pokedex-favorites');
@@ -50,7 +51,7 @@ export default function App() {
   const visiblePokemon = useMemo(() => {
     const normalized = query.trim().toLowerCase().replace(/^#/, '');
     
-    return pokedexData.pokemon.filter((item) => {
+    const filtered = pokedexData.pokemon.filter((item) => {
       let matchesType = false;
       if (activeType === 'Todos') {
         matchesType = true;
@@ -64,7 +65,21 @@ export default function App() {
       
       return matchesType && matchesSearch;
     });
-  }, [activeType, query, favorites]);
+
+    return filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name': return a.name.localeCompare(b.name);
+        case 'hp': return b.stats.hp - a.stats.hp;
+        case 'attack': return b.stats.attack - a.stats.attack;
+        case 'defense': return b.stats.defense - a.stats.defense;
+        case 'specialAttack': return b.stats.specialAttack - a.stats.specialAttack;
+        case 'specialDefense': return b.stats.specialDefense - a.stats.specialDefense;
+        case 'speed': return b.stats.speed - a.stats.speed;
+        case 'id':
+        default: return a.id - b.id;
+      }
+    });
+  }, [activeType, query, favorites, sortBy]);
 
   return (
     <div className="app-shell">
@@ -142,7 +157,25 @@ export default function App() {
         <section className="content">
           <div className="results-heading">
             <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : activeType === 'Favoritos' ? 'Seus Favoritos' : `Pokémon tipo ${activeType}`}</h2>
-            <span>{visiblePokemon.length} resultados</span>
+            
+            <div className="results-actions">
+              <select 
+                className="sort-select" 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Ordenar por"
+              >
+                <option value="id">Menor ID</option>
+                <option value="name">Nome (A-Z)</option>
+                <option value="hp">Maior HP</option>
+                <option value="attack">Maior Ataque</option>
+                <option value="defense">Maior Defesa</option>
+                <option value="specialAttack">Maior Sp. Atk</option>
+                <option value="specialDefense">Maior Sp. Def</option>
+                <option value="speed">Maior Velocidade</option>
+              </select>
+              <span>{visiblePokemon.length} resultados</span>
+            </div>
           </div>
 
           {visiblePokemon.length ? (
