@@ -1,41 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
 
 :root {
-  color: #172234;
-  background: #f6f8fc;
-  font-family: 'DM Sans', sans-serif;
+  --bg-gradient-top: #fff;
+  --bg-gradient-bottom: #f7f9fc;
+  --text-main: #172234;
+  --text-secondary: #758094;
+  --header-bg: rgba(255, 255, 255, 0.88);
+  --border-color: #e9edf4;
+  --panel-bg: white;
+  --card-bg: white;
+  --chip-bg: white;
+  --chip-text: #667185;
+  --input-bg: #f7f9fc;
+  --orb-bg: rgba(255, 255, 255, 0.42);
+}
+
+body.dark {
+  --bg-gradient-top: #0f141e;
+  --bg-gradient-bottom: #1a2233;
+  --text-main: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --header-bg: rgba(15, 20, 30, 0.88);
+  --border-color: #2d3748;
+  --panel-bg: #1e293b;
+  --card-bg: #1e293b;
+  --chip-bg: #1e293b;
+  --chip-text: #cbd5e1;
+  --input-bg: #0f141e;
+  --orb-bg: rgba(255, 255, 255, 0.1);
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  color: var(--text-main);
+  background-color: var(--bg-gradient-top);
+  font-family: 'DM Sans', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button, input {
+button,
+input {
   font: inherit;
 }
 
 button {
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 * {
   box-sizing: border-box;
   scrollbar-width: thin;
-  scrollbar-color: #d5dbe7 transparent;
+  scrollbar-color: var(--border-color) transparent;
 }
 
-/* Layout Geral e Header */
+/* Layout geral */
 .app-shell {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fff 0, #f7f9fc 32rem);
+  background: linear-gradient(
+    180deg,
+    var(--bg-gradient-top) 0,
+    var(--bg-gradient-bottom) 32rem
+  );
 }
 
+/* Header e navegação */
 .site-header {
   height: 82px;
-  border-bottom: 1px solid #e9edf4;
-  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--header-bg);
   backdrop-filter: blur(18px);
   position: sticky;
   top: 0;
@@ -53,7 +88,7 @@ button {
 }
 
 .brand {
-  color: #172234;
+  color: var(--text-main);
   text-decoration: none;
   font: 800 24px 'Manrope', sans-serif;
   letter-spacing: -0.8px;
@@ -70,7 +105,11 @@ button {
   border-radius: 50%;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(#ef4455 0 44%, #233047 44% 56%, white 56%);
+  background: linear-gradient(
+    #ef4455 0 44%,
+    #233047 44% 56%,
+    white 56%
+  );
 }
 
 .brand-ball i {
@@ -84,6 +123,25 @@ button {
   transform: translate(-50%, -50%);
 }
 
+/* Botão de tema */
+.theme-toggle {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.theme-toggle:hover {
+  filter: brightness(1.1);
+}
+
+/* Perfil e conteúdo principal */
 .profile-button {
   width: 40px;
   height: 40px;
@@ -101,7 +159,7 @@ main {
   padding: 0 28px 70px;
 }
 
-/* Seção de Intro */
+/* Seção de introdução */
 .intro {
   padding: 56px 0 40px;
   display: flex;
@@ -123,7 +181,7 @@ main {
   margin: 0;
   font: 800 clamp(36px, 5vw, 58px) / 1.05 'Manrope', sans-serif;
   letter-spacing: -2.6px;
-  color: #162236;
+  color: var(--text-main);
 }
 
 .intro h1 span {
@@ -132,25 +190,26 @@ main {
 
 .intro-copy {
   margin: 17px 0 0;
-  color: #758094;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
+/* Contador da coleção */
 .collection-count {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 17px;
-  border-left: 1px solid #dfe4ec;
+  border-left: 1px solid var(--border-color);
 }
 
 .collection-count strong {
   font: 800 30px 'Manrope', sans-serif;
-  color: #172234;
+  color: var(--text-main);
 }
 
 .collection-count span {
-  color: #7b8595;
+  color: var(--text-secondary);
   text-transform: uppercase;
   font-size: 9px;
   font-weight: 700;
@@ -160,8 +219,8 @@ main {
 
 /* Filtros */
 .filter-section {
-  border-top: 1px solid #e8ecf2;
-  border-bottom: 1px solid #e8ecf2;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 34px;
 }
 
@@ -178,9 +237,9 @@ main {
 
 .filter-chip {
   flex: 0 0 auto;
-  border: 1px solid #e1e6ed;
-  background: white;
-  color: #667185;
+  border: 1px solid var(--border-color);
+  background: var(--chip-bg);
+  color: var(--chip-text);
   border-radius: 999px;
   padding: 9px 16px;
   font-size: 13px;
@@ -193,7 +252,7 @@ main {
 
 .filter-chip:hover {
   transform: translateY(-1px);
-  border-color: #aeb7c5;
+  filter: brightness(0.95);
 }
 
 .filter-chip.active {
@@ -209,6 +268,7 @@ main {
   border-radius: 50%;
 }
 
+/* Cabeçalho dos resultados */
 .results-heading {
   margin-bottom: 20px;
   display: flex;
@@ -223,11 +283,11 @@ main {
 }
 
 .results-heading span {
-  color: #8a94a5;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
-/* Tags de Tipo (Cores globais das pílulas) */
+/* Tags de tipo Pokémon */
 .type-badge {
   color: white;
   padding: 5px 10px;
@@ -302,7 +362,7 @@ main {
   background: #aaaabb;
 }
 
-/* Modal de Detalhes (PokemonDetails) */
+/* Modal de detalhes */
 .panel-open {
   overflow: hidden;
 }
@@ -318,7 +378,7 @@ main {
   inset: 0;
   width: 100%;
   border: 0;
-  background: rgba(17, 25, 39, 0.46);
+  background: rgba(17, 25, 39, 0.6);
   backdrop-filter: blur(4px);
   animation: fade-in 0.25s ease;
 }
@@ -330,10 +390,11 @@ main {
   bottom: 0;
   width: min(520px, 100%);
   overflow-y: auto;
-  box-shadow: -22px 0 60px rgba(20, 28, 40, 0.2);
+  box-shadow: -22px 0 60px rgba(0, 0, 0, 0.4);
   animation: slide-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Botão de fechar */
 .close-button {
   position: absolute;
   right: 20px;
@@ -343,25 +404,27 @@ main {
   height: 42px;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--orb-bg);
   display: grid;
   place-items: center;
   transition: 0.2s;
+  backdrop-filter: blur(5px);
 }
 
 .close-button:hover {
-  background: white;
+  background: var(--panel-bg);
   transform: rotate(90deg);
 }
 
 .close-button svg {
   width: 20px;
   fill: none;
-  stroke: #293447;
+  stroke: var(--text-main);
   stroke-width: 1.8;
   stroke-linecap: round;
 }
 
+/* Imagem e área visual do Pokémon */
 .detail-visual {
   height: 43%;
   min-height: 330px;
@@ -373,7 +436,7 @@ main {
   position: absolute;
   left: 28px;
   top: 27px;
-  color: rgba(33, 45, 62, 0.52);
+  color: var(--text-secondary);
   font: 700 13px 'Manrope', sans-serif;
   letter-spacing: 1.2px;
 }
@@ -381,7 +444,7 @@ main {
 .detail-orb {
   width: 330px;
   height: 330px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--orb-bg);
   border-radius: 50%;
   position: absolute;
   top: 25px;
@@ -398,21 +461,22 @@ main {
   left: 50%;
   bottom: -13px;
   transform: translateX(-50%);
-  filter: drop-shadow(0 18px 13px rgba(38, 48, 63, 0.18));
+  filter: drop-shadow(0 18px 13px rgba(0, 0, 0, 0.3));
 }
 
+/* Conteúdo dos detalhes */
 .detail-content {
   min-height: 57%;
-  background: white;
+  background: var(--panel-bg);
   border-radius: 30px 30px 0 0;
   position: relative;
   z-index: 2;
   padding: 33px 35px 40px;
+  color: var(--text-main);
 }
 
 .detail-content h2 {
   margin: 0 0 12px;
-  color: #172234;
   font: 800 38px 'Manrope', sans-serif;
   letter-spacing: -1.5px;
 }
@@ -421,11 +485,12 @@ main {
   padding: 6px 12px;
 }
 
+/* Estatísticas */
 .stats-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #edf0f4;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
   margin-bottom: 16px;
 }
@@ -436,7 +501,7 @@ main {
 }
 
 .stats-header span {
-  color: #8993a3;
+  color: var(--text-secondary);
   font-size: 11px;
 }
 
@@ -454,11 +519,11 @@ main {
 }
 
 .stat-row > span {
-  color: #8490a1;
+  color: var(--text-secondary);
 }
 
 .stat-row strong {
-  color: #2a3649;
+  color: var(--text-main);
   text-align: right;
   font-size: 11px;
 }
@@ -466,7 +531,7 @@ main {
 .stat-track {
   height: 6px;
   overflow: hidden;
-  background: #edf0f4;
+  background: var(--border-color);
   border-radius: 99px;
 }
 
@@ -498,7 +563,7 @@ main {
   }
 }
 
-/* Responsividade */
+/* Responsividade para tablets */
 @media (max-width: 900px) {
   .nav-wrap {
     gap: 24px;
@@ -509,6 +574,7 @@ main {
   }
 }
 
+/* Responsividade para dispositivos móveis */
 @media (max-width: 680px) {
   .site-header {
     height: auto;

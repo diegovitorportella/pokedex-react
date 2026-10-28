@@ -7,7 +7,6 @@ import TrainerList from './components/TrainerList';
 import './css/App.css';
 import './css/PokemonList.css';
 
-// Adicionamos 'Favoritos' como uma opção de filtro inicial
 const allTypes = ['Todos', 'Favoritos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
 
 export default function App() {
@@ -15,14 +14,30 @@ export default function App() {
   const [activeType, setActiveType] = useState('Todos');
   const [selected, setSelected] = useState(null);
   const [showTrainers, setShowTrainers] = useState(false);
+  
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('pokedex-favorites');
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('pokedex-theme');
+    return savedMode === 'dark';
+  });
+
   useEffect(() => {
     localStorage.setItem('pokedex-favorites', JSON.stringify(favorites));
   }, [favorites]);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark');
+      localStorage.setItem('pokedex-theme', 'dark');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('pokedex-theme', 'light');
+    }
+  }, [darkMode]);
 
   const toggleFavorite = (id) => {
     setFavorites(prev => 
@@ -59,6 +74,15 @@ export default function App() {
             <span className="brand-ball"><i /></span> Pokédex
           </a>
           <SearchBar query={query} setQuery={setQuery} />
+          
+          <button 
+            className="theme-toggle" 
+            onClick={() => setDarkMode(!darkMode)}
+            title="Alternar Tema"
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+          
           <button className="profile-button" onClick={() => setShowTrainers(true)} title="Ver Treinadores">
             TR
           </button>
