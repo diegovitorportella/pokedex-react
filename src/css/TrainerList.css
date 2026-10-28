@@ -4,7 +4,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   background: var(--bg-gradient-bottom);
-  width: min(800px, 90%);
+  width: min(900px, 90%);
   max-height: 85vh;
   border-radius: 24px;
   padding: 30px;
@@ -18,70 +18,117 @@
   margin-top: 0;
   font: 800 28px 'Manrope', sans-serif;
   color: var(--text-main);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-/* Grid de treinadores */
 .trainer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
-/* Cartão do treinador */
 .trainer-card {
   background: var(--panel-bg);
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--border-color);
-  transition: transform 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .trainer-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--text-secondary);
 }
 
-/* Cabeçalho do treinador */
 .trainer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
+  padding-bottom: 18px;
 }
 
-.trainer-header h3 {
-  margin: 0;
-  font: 700 18px 'Manrope', sans-serif;
-  color: var(--text-main);
-}
-
-/* Contador de insígnias */
-.badges-count {
-  font-size: 11px;
-  font-weight: 700;
-  color: #f1794c;
-  background: rgba(241, 121, 76, 0.15);
-  padding: 4px 8px;
-  border-radius: 8px;
-}
-
-/* Pokémon do treinador */
-.trainer-pokemon {
+.trainer-profile {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.trainer-avatar-wrapper {
+  width: 84px;
+  height: 84px;
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 50% 70%,
+      rgba(255, 255, 255, 0.4),
+      transparent 65%
+    ),
+    linear-gradient(180deg, var(--border-color), var(--input-bg));
+  box-shadow: inset 0 0 0 1.5px var(--border-color);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.trainer-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.15) translateY(4%);
+}
+
+.trainer-info {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.trainer-pokemon img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
+.trainer-info h3 {
+  margin: 0;
+  font: 800 22px 'Manrope', sans-serif;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.badges-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f1794c;
+  background: rgba(241, 121, 76, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.trainer-pokemon {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 10px;
+}
+
+.trainer-poke-slot {
+  aspect-ratio: 1;
   background: var(--input-bg);
   border-radius: 50%;
-  padding: 4px;
+  padding: 6px;
   border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.trainer-poke-slot:hover {
+  border-color: var(--text-secondary);
+  background: var(--panel-bg);
+}
+
+.trainer-poke-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
