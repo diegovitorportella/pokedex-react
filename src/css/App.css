@@ -57,6 +57,7 @@ button {
   scrollbar-color: var(--border-color) transparent; 
 }
 
+/* Layout Geral e Header */
 .app-shell {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--bg-gradient-top) 0, var(--bg-gradient-bottom) 32rem);
@@ -148,6 +149,7 @@ main {
   padding: 0 28px 70px; 
 }
 
+/* Seção Intro */
 .intro { 
   padding: 56px 0 40px; 
   display: flex; 
@@ -204,6 +206,7 @@ main {
   line-height: 1.4; 
 }
 
+/* Filtros */
 .filter-section { 
   border-top: 1px solid var(--border-color); 
   border-bottom: 1px solid var(--border-color); 
@@ -212,13 +215,9 @@ main {
 
 .filter-row { 
   display: flex; 
+  flex-wrap: wrap; 
   gap: 9px; 
-  overflow-x: auto; 
   padding: 16px 1px; 
-}
-
-.filter-row::-webkit-scrollbar { 
-  display: none; 
 }
 
 .filter-chip { 
@@ -254,6 +253,7 @@ main {
   border-radius: 50%; 
 }
 
+/* Ordenação e Resultados */
 .results-heading { 
   margin-bottom: 20px; 
   display: flex; 
@@ -320,6 +320,7 @@ main {
   box-shadow: 0 0 0 3px var(--border-color); 
 }
 
+/* Badges de Tipo */
 .type-badge { 
   color: white; 
   padding: 5px 10px; 
@@ -347,6 +348,7 @@ main {
 .type-flying { background: #a291eb; } 
 .type-steel { background: #aaaabb; }
 
+/* Modal de Detalhes */
 .panel-open { 
   overflow: hidden; 
 }
@@ -524,6 +526,7 @@ main {
   transform-origin: left; 
 }
 
+/* Animação Pokébola */
 .random-anim-overlay {
   position: fixed;
   inset: 0;
@@ -637,6 +640,7 @@ main {
   100% { transform: scale(1); }
 }
 
+/* Responsividade */
 @media (max-width: 900px) { 
   .nav-wrap { 
     gap: 24px; 
