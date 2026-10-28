@@ -3,6 +3,7 @@ import pokedexData from './data/pokedex-data.json';
 import SearchBar from './components/SearchBar';
 import PokemonCard from './components/PokemonCard';
 import PokemonDetails from './components/PokemonDetails';
+import TrainerList from './components/TrainerList';
 import './css/App.css';
 import './css/PokemonList.css';
 
@@ -12,6 +13,7 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState('Todos');
   const [selected, setSelected] = useState(null);
+  const [showTrainers, setShowTrainers] = useState(false);
 
   const visiblePokemon = useMemo(() => {
     const normalized = query.trim().toLowerCase().replace(/^#/, '');
@@ -29,8 +31,13 @@ export default function App() {
           <a className="brand" href="#">
             <span className="brand-ball"><i /></span> Pokédex
           </a>
+          
           <SearchBar query={query} setQuery={setQuery} />
-          <button className="profile-button">TR</button>
+          
+          {/* Botão para abrir o modal de treinadores */}
+          <button className="profile-button" onClick={() => setShowTrainers(true)} title="Ver Treinadores">
+            TR
+          </button>
         </nav>
       </header>
 
@@ -83,11 +90,22 @@ export default function App() {
             </div>
           )}
         </section>
-</main>
-      {/* Renderiza o modal apenas se houver um Pokémon selecionado */}
+      </main>
+
+      {/* Modais com Renderização Condicional */}
+      
       {selected && (
         <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
       )}
+
+      {showTrainers && (
+        <TrainerList 
+          trainers={pokedexData.trainers} 
+          pokemonList={pokedexData.pokemon} 
+          onClose={() => setShowTrainers(false)} 
+        />
+      )}
+      
     </div>
   );
 }
