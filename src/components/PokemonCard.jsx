@@ -4,7 +4,8 @@ import '../css/PokemonCard.css';
 const padId = (id) => `#${String(id).padStart(3, '0')}`;
 const imageUrl = (id) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`;
 
-export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavorite }) {
+// ⚔️ COMPARAÇÃO: recebe também isComparing e onToggleCompare
+export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavorite, isComparing, onToggleCompare }) {
   const mainType = pokemon.types && pokemon.types.length > 0 
     ? pokemon.types[0].name.toLowerCase() 
     : 'normal';
@@ -12,6 +13,12 @@ export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavo
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
     onToggleFavorite(pokemon.id);
+  };
+
+  // ⚔️ COMPARAÇÃO: clicar no botão não abre os detalhes do card
+  const handleCompareClick = (e) => {
+    e.stopPropagation();
+    onToggleCompare(pokemon);
   };
 
   return (
@@ -36,6 +43,23 @@ export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavo
           </svg>
         )}
       </button>
+
+      {/* ⚔️ COMPARAÇÃO: botão ao lado da estrela */}
+      {onToggleCompare && (
+        <button
+          className={`compare-btn ${isComparing ? 'active' : ''}`}
+          onClick={handleCompareClick}
+          aria-label={isComparing ? "Remover da comparação" : "Adicionar à comparação"}
+          title="Comparar"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 4 3 8l4 4" />
+            <path d="M3 8h13" />
+            <path d="m17 20 4-4-4-4" />
+            <path d="M21 16H8" />
+          </svg>
+        </button>
+      )}
 
       <span className="card-id">{padId(pokemon.id)}</span>
       <span className="card-orb" />

@@ -5,6 +5,9 @@ import PokemonCard from './components/PokemonCard';
 import PokemonDetails from './components/PokemonDetails';
 import TrainerList from './components/TrainerList';
 import PokedexCover from './components/PokedexCover';
+// ⚔️ COMPARAÇÃO: novos componentes
+import CompareBar from './components/CompareBar';
+import PokemonCompare from './components/PokemonCompare';
 import './css/App.css';
 import './css/PokemonList.css';
 
@@ -20,6 +23,10 @@ export default function App() {
 
   const [isAnimating, setIsAnimating] = useState(false);
   const [animState, setAnimState] = useState('shaking');
+
+  // ⚔️ COMPARAÇÃO: Pokémon escolhidos (máx. 2) e controle do modal
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('pokedex-favorites');
@@ -51,6 +58,16 @@ export default function App() {
         ? prev.filter(favId => favId !== id)
         : [...prev, id]
     );
+  };
+
+  // ⚔️ COMPARAÇÃO: adiciona/remove um Pokémon. Se já houver 2, o mais antigo sai.
+  const toggleCompare = (pokemon) => {
+    setCompareList(prev => {
+      if (prev.some(p => p.id === pokemon.id)) {
+        return prev.filter(p => p.id !== pokemon.id);
+      }
+      return prev.length < 2 ? [...prev, pokemon] : [prev[1], pokemon];
+    });
   };
 
   const handleRandomPokemon = () => {
@@ -228,6 +245,9 @@ export default function App() {
                     onClick={() => setSelected(item)}
                     isFavorite={favorites.includes(item.id)}
                     onToggleFavorite={toggleFavorite}
+                    // ⚔️ COMPARAÇÃO: props do botão de comparar
+                    isComparing={compareList.some(p => p.id === item.id)}
+                    onToggleCompare={toggleCompare}
                   />
                 ))}
               </div>
@@ -244,6 +264,22 @@ export default function App() {
 
         {selected && (
           <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
+        )}
+
+        {/* ⚔️ COMPARAÇÃO: barra do rodapé e modal "VS" */}
+        <CompareBar
+          selected={compareList}
+          onRemove={(id) => setCompareList(prev => prev.filter(p => p.id !== id))}
+          onClear={() => setCompareList([])}
+          onCompare={() => setShowCompare(true)}
+        />
+
+        {showCompare && compareList.length === 2 && (
+          <PokemonCompare
+            left={compareList[0]}
+            right={compareList[1]}
+            onClose={() => setShowCompare(false)}
+          />
         )}
 
         {showTrainers && (
