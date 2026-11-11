@@ -1,5 +1,7 @@
-import { useMemo, useState, useEffect } from 'react';
-import pokedexData from './data/pokedex-data.json';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import { api } from './services/api';
+import PokemonForm from './components/PokemonForm';
+import './css/PokemonForm.css';
 import SearchBar from './components/SearchBar';
 import PokemonCard from './components/PokemonCard';
 import PokemonDetails from './components/PokemonDetails';
@@ -11,9 +13,43 @@ import PokemonCompare from './components/PokemonCompare';
 import './css/App.css';
 import './css/PokemonList.css';
 
-const allTypes = ['Todos', 'Favoritos', ...pokedexData.types.filter(t => t.name !== 'Typeless').map(t => t.name)];
-
 export default function App() {
+  // 🌐 Dados vindos da API Spring Boot (MongoDB)
+  const [pokemons, setPokemons] = useState([]); // lista completa (aleatório, contagem, treinadores)
+  const [results, setResults] = useState(null); // resultado da busca/filtro feito pela API
+  const [refreshKey, setRefreshKey] = useState(0); // força nova consulta após cadastrar/editar/excluir
+  const [types, setTypes] = useState([]);
+  const [trainers, setTrainers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  // ➕✏️ Formulário: null = fechado, {} = cadastrar, pokemon = editar
+  const [formTarget, setFormTarget] = useState(null);
+
+  const loadData = useCallback(() => {
+    Promise.all([api.getPokemons(), api.getTypes(), api.getTrainers()])
+      .then(([p, t, tr]) => {
+        setPokemons(p);
+        setTypes(t);
+        setTrainers(tr);
+        setLoadError('');
+      })
+      .catch((err) => setLoadError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(loadData, [loadData]);
+
+  const retryLoad = () => {
+    setLoading(true);
+    loadData();
+    setRefreshKey(k => k + 1);
+  };
+
+  const allTypes = useMemo(
+    () => ['Todos', 'Favoritos', ...types.filter(t => t.name !== 'Typeless').map(t => t.name)],
+    [types]
+  );
+
   const [isPoweredOn, setIsPoweredOn] = useState(false);
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState('Todos');
@@ -70,13 +106,42 @@ export default function App() {
     });
   };
 
+  // ➕✏️🗑️ CRUD via API
+  const handleSave = async (payload) => {
+    const saved = formTarget?.id
+      ? await api.updatePokemon(formTarget.id, payload)
+      : await api.createPokemon(payload);
+    setPokemons(prev =>
+      prev.some(p => p.id === saved.id)
+        ? prev.map(p => (p.id === saved.id ? saved : p))
+        : [...prev, saved]
+    );
+    setRefreshKey(k => k + 1);
+    setCompareList(prev => prev.map(p => (p.id === saved.id ? saved : p)));
+    setSelected(prev => (prev && prev.id === saved.id ? saved : prev));
+    setFormTarget(null);
+  };
+
+  const handleDelete = async (pokemon) => {
+    try {
+      await api.deletePokemon(pokemon.id);
+      setPokemons(prev => prev.filter(p => p.id !== pokemon.id));
+      setRefreshKey(k => k + 1);
+      setCompareList(prev => prev.filter(p => p.id !== pokemon.id));
+      setFavorites(prev => prev.filter(id => id !== pokemon.id));
+      setSelected(null);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleRandomPokemon = () => {
-    if (isAnimating) return;
+    if (isAnimating || pokemons.length === 0) return;
     setIsAnimating(true);
     setAnimState('shaking');
 
-    const randomIndex = Math.floor(Math.random() * pokedexData.pokemon.length);
-    const randomPoke = pokedexData.pokemon[randomIndex];
+    const randomIndex = Math.floor(Math.random() * pokemons.length);
+    const randomPoke = pokemons[randomIndex];
 
     setTimeout(() => {
       setAnimState('open');
@@ -89,23 +154,36 @@ export default function App() {
     }, 1200);
   };
 
+  // 🔎🧬 Pesquisa por nome/ID e filtro por tipo são feitos pela API
+  // (GET /api/pokemons?name=...&type=...), com um pequeno atraso enquanto o usuário digita.
+  useEffect(() => {
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      const params = {
+        name: query.trim(),
+        type: activeType === 'Todos' || activeType === 'Favoritos' ? '' : activeType,
+      };
+      api.getPokemons(params)
+        .then((data) => {
+          if (!cancelled) {
+            setResults(data);
+            setLoadError('');
+          }
+        })
+        .catch((err) => !cancelled && setLoadError(err.message));
+    }, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, activeType, refreshKey]);
+
   const visiblePokemon = useMemo(() => {
-    const normalized = query.trim().toLowerCase().replace(/^#/, '');
-
-    const filtered = pokedexData.pokemon.filter((item) => {
-      let matchesType = false;
-      if (activeType === 'Todos') {
-        matchesType = true;
-      } else if (activeType === 'Favoritos') {
-        matchesType = favorites.includes(item.id);
-      } else {
-        matchesType = item.types.some(t => t.name === activeType);
-      }
-
-      const matchesSearch = !normalized || item.name.toLowerCase().includes(normalized) || String(item.id).includes(normalized);
-
-      return matchesType && matchesSearch;
-    });
+    // "Favoritos" é uma preferência local (localStorage), então filtra sobre o resultado da API
+    const list = results ?? [];
+    const filtered = activeType === 'Favoritos'
+      ? list.filter((item) => favorites.includes(item.id))
+      : [...list];
 
     return filtered.sort((a, b) => {
       switch (sortBy) {
@@ -120,7 +198,7 @@ export default function App() {
         default: return a.id - b.id;
       }
     });
-  }, [activeType, query, favorites, sortBy]);
+  }, [results, activeType, favorites, sortBy]);
 
   return (
     <>
@@ -183,7 +261,7 @@ export default function App() {
               <p className="intro-copy">Explore Pokémon, seus tipos, habilidades e atributos.</p>
             </div>
             <div className="collection-count">
-              <strong>{pokedexData.pokemon.length}</strong>
+              <strong>{pokemons.length}</strong>
               <span>Pokémon<br />na base</span>
             </div>
           </section>
@@ -213,6 +291,9 @@ export default function App() {
               <h2>{activeType === 'Todos' ? 'Todos os Pokémon' : activeType === 'Favoritos' ? 'Seus Favoritos' : `Pokémon tipo ${activeType}`}</h2>
 
               <div className="results-actions">
+                <button className="new-pokemon-btn" onClick={() => setFormTarget({})} title="Cadastrar Pokémon">
+                  ➕ Novo
+                </button>
                 <button className="random-btn" onClick={handleRandomPokemon} title="Sortear Pokémon">
                   🎲 Aleatório
                 </button>
@@ -236,7 +317,15 @@ export default function App() {
               </div>
             </div>
 
-            {visiblePokemon.length ? (
+            {loading || (results === null && !loadError) ? (
+              <div className="api-status"><h3>Carregando Pokémon...</h3></div>
+            ) : loadError ? (
+              <div className="api-status">
+                <h3>Falha ao carregar os dados</h3>
+                <p>{loadError}</p>
+                <button onClick={retryLoad}>Tentar novamente</button>
+              </div>
+            ) : visiblePokemon.length ? (
               <div className="pokemon-grid">
                 {visiblePokemon.map((item) => (
                   <PokemonCard
@@ -263,7 +352,21 @@ export default function App() {
         </main>
 
         {selected && (
-          <PokemonDetails pokemon={selected} onClose={() => setSelected(null)} />
+          <PokemonDetails
+            pokemon={selected}
+            onClose={() => setSelected(null)}
+            onEdit={(p) => setFormTarget(p)}
+            onDelete={handleDelete}
+          />
+        )}
+
+        {formTarget && (
+          <PokemonForm
+            pokemon={formTarget.id ? formTarget : null}
+            types={types}
+            onSave={handleSave}
+            onClose={() => setFormTarget(null)}
+          />
         )}
 
         {/* ⚔️ COMPARAÇÃO: barra do rodapé e modal "VS" */}
@@ -284,8 +387,8 @@ export default function App() {
 
         {showTrainers && (
           <TrainerList
-            trainers={pokedexData.trainers}
-            pokemonList={pokedexData.pokemon}
+            trainers={trainers}
+            pokemonList={pokemons}
             onClose={() => setShowTrainers(false)}
           />
         )}
