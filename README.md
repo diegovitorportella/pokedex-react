@@ -89,7 +89,7 @@ A interface foi pensada para parecer uma **Pokédex de verdade**: a página é a
 
 **Backend**
 
-- **Spring Boot 3.5** com Spring Web, Spring Data MongoDB e Bean Validation (Java 21+).
+- **Spring Boot 3.5** com Spring Web, Spring Data MongoDB e Bean Validation (Java 25).
 - **MongoDB** (Atlas ou local).
 
 **Imagens:** os sprites dos Pokémon vêm do repositório público da [PokéAPI](https://github.com/PokeAPI/sprites) (`sprites/pokemon/other/home/{id}.png`) e os dos treinadores do [Pokémon Showdown](https://play.pokemonshowdown.com/sprites/trainers/). Os dados (atributos, tipos, treinadores) vêm do `Script_Pokedex.sql`, via API própria.
@@ -155,7 +155,7 @@ Na **primeira execução**, se a coleção `pokemons` estiver vazia, o backend l
 ### 📋 Pré-requisitos
 
 - [Node.js](https://nodejs.org/) (inclui o npm)
-- **JDK 21 ou superior** e [Maven](https://maven.apache.org/)
+- **JDK 25** (o projeto é compilado para Java 25) e [Maven](https://maven.apache.org/)
 - Uma conta no [MongoDB Atlas](https://www.mongodb.com/atlas) (ou um MongoDB local)
 - [Git](https://git-scm.com/)
 
@@ -244,6 +244,36 @@ A barra de pesquisa e o filtro por tipo da interface chamam a API:
 - **Detalhes do Pokémon:** botões **✏️ Editar** (mesmo formulário preenchido) e **🗑️ Excluir** (com confirmação).
 
 > As imagens vêm do **ID** do Pokémon. Um Pokémon novo recebe o próximo ID (152, 153...), então a imagem exibida será a do Pokémon real com esse número na PokéAPI.
+
+---
+
+## ☁️ Publicar na internet (deploy)
+
+A Vercel hospeda o **frontend**. O backend Spring Boot (Java) precisa de um serviço que rode servidores, como o **Render**. O banco continua no Atlas.
+
+```text
+Vercel (React)  →  Render (Spring Boot, via Docker)  →  MongoDB Atlas
+```
+
+**Cada serviço recebe só as variáveis de que precisa:**
+
+| Onde | Variável | Valor |
+| --- | --- | --- |
+| Render (backend) | `MONGODB_URI` | connection string do Atlas (segredo) |
+| Render (backend) | `CORS_ALLOWED_ORIGINS` | `https://seu-app.vercel.app` |
+| Vercel (frontend) | `VITE_API_URL` | `https://seu-backend.onrender.com/api` |
+
+> ⚠️ Nunca coloque o `MONGODB_URI` na Vercel: variáveis `VITE_*` ficam visíveis no navegador.
+
+**1. Atlas:** em *Network Access*, libere `0.0.0.0/0` (o IP do Render muda).
+
+**2. Backend no Render:** *New → Blueprint*, escolha este repositório (ele lê o `render.yaml` e usa o `backend/Dockerfile`). Quando pedir, informe `MONGODB_URI` e, por enquanto, qualquer valor em `CORS_ALLOWED_ORIGINS`. Ao terminar, anote a URL do serviço. Teste abrindo `https://seu-backend.onrender.com/api/types`.
+
+> No plano gratuito o serviço "dorme" quando fica parado: a primeira requisição pode levar de 30 a 60 segundos.
+
+**3. Frontend na Vercel:** *Add New → Project*, importe o repositório. A Vercel detecta o Vite sozinha (`npm run build`, saída `dist`). Em *Environment Variables*, cadastre `VITE_API_URL` com a URL do Render terminando em `/api`. O valor é lido **na hora do build**: se mudar depois, faça *Redeploy*.
+
+**4. Fechar o CORS:** volte ao Render e ajuste `CORS_ALLOWED_ORIGINS` para a URL que a Vercel gerou (sem barra no final). Para mais de uma origem, separe por vírgula.
 
 ---
 
