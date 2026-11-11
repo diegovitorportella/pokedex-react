@@ -22,9 +22,18 @@ export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavo
   };
 
   return (
-    <button
+    // div com role="button": um <button> não pode conter outros <button> (favorito/comparar)
+    <div
       className={`pokemon-card card-${mainType}`}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
       aria-label={`Ver detalhes do ${pokemon.name}`}
     >
       <button 
@@ -75,6 +84,6 @@ export default function PokemonCard({ pokemon, onClick, isFavorite, onToggleFavo
         </span>
       </span>
       <span className="card-arrow" aria-hidden="true">↗</span>
-    </button>
+    </div>
   );
 }
