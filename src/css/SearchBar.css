@@ -1,27 +1,31 @@
+/* Campo de pesquisa: slot do scanner da Pokédex */
 .search-box {
   margin-left: auto;
   width: min(500px, 52vw);
-  height: 46px;
-  border: 1px solid var(--border-color);
-  background: var(--input-bg);
+  height: 50px;
+  border: 3px solid var(--bezel);
+  background: var(--lcd-bg);
   border-radius: 14px;
   display: flex;
   align-items: center;
-  padding: 0 13px;
+  padding: 0 14px;
   gap: 10px;
-  transition: 0.2s;
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.8), 0 2px 0 rgba(255, 255, 255, 0.35);
+  transition: box-shadow 0.2s;
 }
 
 .search-box:focus-within {
-  background: var(--panel-bg);
-  border-color: var(--text-secondary);
-  box-shadow: 0 0 0 4px var(--border-color);
+  box-shadow:
+    inset 0 3px 10px rgba(0, 0, 0, 0.8),
+    0 0 0 3px rgba(79, 224, 255, 0.55),
+    0 0 18px rgba(79, 224, 255, 0.45);
 }
 
 .search-box svg {
   width: 20px;
+  flex-shrink: 0;
   fill: none;
-  stroke: var(--text-secondary);
+  stroke: var(--lcd-text);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -32,22 +36,25 @@
   background: transparent;
   min-width: 0;
   width: 100%;
-  color: var(--text-main);
-  font-size: 14px;
+  color: #d6f6ff;
+  font: 500 16px var(--font-body);
+  caret-color: var(--lcd-text);
 }
 
 .search-box input::placeholder {
-  color: var(--text-secondary);
+  color: #78a0ae;
+}
+
+.search-box input::-webkit-search-cancel-button {
+  filter: invert(1) brightness(1.4);
 }
 
 .search-box kbd {
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  background: var(--panel-bg);
+  color: #78a0ae;
+  border: 1px solid #1f3b49;
   border-radius: 6px;
-  padding: 3px 7px;
-  font-size: 11px;
-  box-shadow: 0 1px 2px var(--border-color);
+  padding: 2px 7px;
+  font: 600 11px var(--font-display);
   white-space: nowrap;
 }
 
@@ -56,6 +63,7 @@
   .search-box {
     order: 2;
     width: 100%;
+    height: 46px;
   }
 
   .search-box kbd {
