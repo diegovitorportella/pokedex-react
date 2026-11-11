@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { api } from './services/api';
 import PokemonForm from './components/PokemonForm';
+import LoadingNotice from './components/LoadingNotice';
 import './css/PokemonForm.css';
 import SearchBar from './components/SearchBar';
 import PokemonCard from './components/PokemonCard';
@@ -320,7 +321,7 @@ export default function App() {
             </div>
 
             {loading || (results === null && !loadError) ? (
-              <div className="api-status"><h3>Carregando Pokémon...</h3></div>
+              <LoadingNotice />
             ) : loadError ? (
               <div className="api-status">
                 <h3>Falha ao carregar os dados</h3>

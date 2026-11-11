@@ -167,6 +167,40 @@ body.dark .btn-danger {
   color: var(--text-secondary);
 }
 
+/* lente que pulsa enquanto carrega */
+.loading-lens {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  border: 4px solid #f4f6f7;
+  background: radial-gradient(circle at 38% 34%, #d4f3ff 0 8%, #5cc8ff 24%, #1387e6 60%, #0a3f8f 100%);
+  box-shadow: 0 0 0 3px var(--bezel);
+  animation: lens-pulse 1.4s ease-in-out infinite;
+}
+
+.loading-notice p {
+  max-width: 44ch;
+  margin: 8px auto 0;
+  line-height: 1.5;
+}
+
+@keyframes lens-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px var(--bezel), 0 0 6px rgba(92, 200, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--bezel), 0 0 22px 4px rgba(92, 200, 255, 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-lens {
+    animation: none;
+  }
+}
+
 .api-status h3 {
   margin: 0 0 6px;
   color: var(--text-main);
