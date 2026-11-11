@@ -1,0 +1,15 @@
+# Blueprint do Render: cria o serviço da API (Spring Boot) a partir do Dockerfile.
+# Os valores marcados com sync: false são pedidos no painel e NÃO ficam no GitHub.
+services:
+  - type: web
+    name: pokedex-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/types
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
