@@ -8,6 +8,13 @@ Projeto desenvolvido nas **Atividades 03 e 04** da disciplina, com a metodologia
 React + Vite (porta 5173)  →  Spring Boot REST API (porta 8080)  →  MongoDB
 ```
 
+## 🌐 Demonstração online
+
+- **Site:** https://pokedex-react-eta.vercel.app/
+- **API:** https://pokedex-api-o8jl.onrender.com/api/pokemons
+
+> O backend roda no plano gratuito do Render e "dorme" quando fica parado. Se o site mostrar "Falha ao carregar" na primeira visita, espere cerca de 1 minuto e clique em **Tentar novamente**.
+
 ## 👥 Dupla
 
 - **Diego Vitor Portella**
