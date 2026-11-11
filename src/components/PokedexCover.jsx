@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../css/PokedexCover.css';
-import pokedexAberta from '../assets/images/pokedex-aberta.webp';
-import pokedexFechada from '../assets/images/pokedex-fechada.webp';
 
+// Capa de abertura: uma Pokédex fechada que o usuário abre para ligar o app.
+// Fases: fechada -> abrindo -> iniciando -> onLigar()
 export default function PokedexCover({ onLigar }) {
   const [fase, setFase] = useState('fechada');
 
@@ -35,11 +35,28 @@ export default function PokedexCover({ onLigar }) {
         disabled={fase !== 'fechada'}
         aria-label="Abrir a Pokédex"
       >
-        <img className="cover__img" src={pokedexAberta} alt="" draggable="false" />
-        <span className="cover__lens" aria-hidden="true" />
-        <span className="cover__led" aria-hidden="true" />
-        <span className="cover__scan" aria-hidden="true" />
-        <img className="cover__lid" src={pokedexFechada} alt="" draggable="false" />
+        {/* topo: lente e LEDs */}
+        <span className="cover__lens" aria-hidden="true"><i /></span>
+        <span className="cover__leds" aria-hidden="true" />
+
+        {/* interior: visor e controles */}
+        <span className="cover__bezel" aria-hidden="true">
+          <span className="cover__screen">
+            <span className="cover__ball"><i /></span>
+            <span className="cover__boot">POKÉDEX</span>
+            <span className="cover__sweep" />
+          </span>
+        </span>
+        <span className="cover__key" aria-hidden="true" />
+        <span className="cover__pill cover__pill--a" aria-hidden="true" />
+        <span className="cover__pill cover__pill--b" aria-hidden="true" />
+        <span className="cover__grill" aria-hidden="true" />
+        <span className="cover__dpad" aria-hidden="true" />
+
+        {/* tampa que abre */}
+        <span className="cover__lid" aria-hidden="true">
+          <span className="cover__emblem"><i /></span>
+        </span>
       </button>
       <p className="cover__hint" role="status" aria-live="polite">
         {legenda}
