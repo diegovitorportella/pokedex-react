@@ -12,7 +12,7 @@ const statColors = {
   'Speed': '#F366B9'
 };
 
-export default function PokemonDetails({ pokemon, onClose }) {
+export default function PokemonDetails({ pokemon, onClose, onEdit, onDelete }) {
   useEffect(() => {
     const closeOnEscape = (event) => event.key === 'Escape' && onClose();
     document.body.classList.add('panel-open');
@@ -76,6 +76,15 @@ export default function PokemonDetails({ pokemon, onClose }) {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="detail-actions">
+            <button className="btn-secondary" onClick={() => onEdit(pokemon)}>✏️ Editar</button>
+            <button
+              className="btn-danger"
+              onClick={() => window.confirm(`Excluir ${pokemon.name}?`) && onDelete(pokemon)}
+            >
+              🗑️ Excluir
+            </button>
           </div>
         </div>
       </aside>
