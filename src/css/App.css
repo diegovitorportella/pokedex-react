@@ -695,90 +695,168 @@ main {
 }
 
 /* =====================================================================
-   Animação da Pokébola (sortear Pokémon) — inalterada
+   Sortear Pokémon: radar da Pokédex escaneando e travando no alvo.
+   Mesmas cores do visor (ciano) e da capa; "localizado" acende em verde.
    ===================================================================== */
 .random-anim-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(17, 25, 39, 0.9);
   z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 30px;
+  background-color: #0a0b0f;
+  background-image:
+    linear-gradient(rgba(79, 224, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 224, 255, 0.045) 1px, transparent 1px),
+    radial-gradient(ellipse 70% 60% at 50% 45%, #5b0f16 0%, #2a0609 48%, #0a0b0f 100%);
+  background-size: 28px 28px, 28px 28px, auto;
+  animation: fade-in 0.25s ease;
   transition: opacity 0.35s ease;
 }
 
+/* o overlay espera um instante no estado "localizado" antes de sumir */
 .random-anim-overlay.fade-out {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.35s ease 0.2s;
 }
 
-.pokeball-anim {
-  width: 120px;
-  height: 120px;
+.radar {
+  --cyan: #4fe0ff;
+  --found: #3bdb6b;
+
   position: relative;
-  animation: shake-ball 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
-}
-
-.pokeball-half {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  background: #ef4455;
-  border-radius: 120px 120px 0 0;
-  border: 6px solid #222;
-  border-bottom: 3px solid #222;
-  box-sizing: border-box;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-}
-
-.pokeball-bottom {
-  top: 50%;
-  background: #fff;
-  border-radius: 0 0 120px 120px;
-  border-top: 3px solid #222;
-  border-bottom: 6px solid #222;
-}
-
-.pokeball-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
-  background: #fff;
-  border: 6px solid #222;
+  width: min(72vw, 340px);
+  aspect-ratio: 1;
   border-radius: 50%;
-  z-index: 10;
-  transition: opacity 0.2s, transform 0.4s ease;
+  overflow: hidden;
+  border: 3px solid rgba(79, 224, 255, 0.55);
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(79, 224, 255, 0.3) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(transparent calc(50% - 1px), rgba(79, 224, 255, 0.3) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    radial-gradient(circle, transparent 0 22%, rgba(79, 224, 255, 0.35) 22% 22.8%, transparent 22.8% 44%, rgba(79, 224, 255, 0.3) 44% 44.8%, transparent 44.8% 66%, rgba(79, 224, 255, 0.25) 66% 66.8%, transparent 66.8%),
+    #06141b;
+  box-shadow:
+    0 0 0 10px #20232b,
+    0 0 0 13px rgba(255, 255, 255, 0.18),
+    0 0 70px rgba(79, 224, 255, 0.3),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.pokeball-button::after {
+/* feixe que gira (2 voltas durante a espera) */
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 70%, rgba(79, 224, 255, 0.55) 100%);
+  animation: radar-spin 0.6s linear infinite;
+}
+
+/* o alvo: aparece com a varredura e emite um "ping" */
+.radar-blip {
+  position: absolute;
+  left: 62%;
+  top: 33%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #ffc531;
+  box-shadow: 0 0 14px 3px rgba(255, 197, 49, 0.8);
+  opacity: 0;
+  animation: blip-in 0.25s ease 0.55s both;
+}
+
+.radar-blip::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: #222;
+  inset: -2px;
   border-radius: 50%;
+  border: 2px solid #ffc531;
+  animation: blip-ping 0.6s ease-out 0.6s infinite;
 }
 
-.pokeball-anim.open .pokeball-half:first-child {
-  transform: translateY(-80px);
-  opacity: 0;
+/* estado "localizado": tudo fica verde e o radar dá um pulso */
+.radar.locked {
+  border-color: var(--found);
+  box-shadow:
+    0 0 0 10px #20232b,
+    0 0 0 13px rgba(255, 255, 255, 0.18),
+    0 0 90px rgba(59, 219, 107, 0.55),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+  animation: radar-lock 0.3s ease-out;
 }
 
-.pokeball-anim.open .pokeball-bottom {
-  transform: translateY(80px);
-  opacity: 0;
+.radar.locked .radar-sweep {
+  animation-play-state: paused;
+  opacity: 0.25;
 }
 
-.pokeball-anim.open .pokeball-button {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(2);
+.radar.locked .radar-blip {
+  background: var(--found);
+  box-shadow: 0 0 22px 6px rgba(59, 219, 107, 0.9);
+  transform: scale(1.5);
+  transition: transform 0.2s;
+}
+
+.radar.locked .radar-blip::after {
+  border-color: var(--found);
+}
+
+.radar-text {
+  margin: 0;
+  font: 600 18px 'Chakra Petch', 'Barlow', sans-serif;
+  letter-spacing: 1px;
+  color: #4fe0ff;
+  text-shadow: 0 0 12px rgba(79, 224, 255, 0.7);
+}
+
+.radar-text.locked {
+  color: #3bdb6b;
+  text-shadow: 0 0 12px rgba(59, 219, 107, 0.7);
+}
+
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blip-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+@keyframes radar-lock {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes slide-in {
@@ -812,20 +890,11 @@ main {
   }
 }
 
-@keyframes shake-ball {
-  0% { transform: rotate(0deg); }
-  15% { transform: rotate(-20deg); }
-  30% { transform: rotate(20deg); }
-  45% { transform: rotate(-15deg); }
-  60% { transform: rotate(15deg); }
-  75% { transform: rotate(0deg); }
-  85% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)); }
-  100% { transform: scale(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .brand-ball,
   .stat-track i,
+  .radar-sweep,
+  .radar-blip::after,
   .detail-panel,
   .modal-backdrop {
     animation: none;

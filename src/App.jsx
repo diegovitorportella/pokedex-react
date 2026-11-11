@@ -207,11 +207,13 @@ export default function App() {
       <div className="app-shell" style={{ display: isPoweredOn ? 'block' : 'none' }}>
         {isAnimating && (
           <div className={`random-anim-overlay ${animState === 'open' ? 'fade-out' : ''}`}>
-            <div className={`pokeball-anim ${animState === 'open' ? 'open' : ''}`}>
-              <div className="pokeball-half"></div>
-              <div className="pokeball-half pokeball-bottom"></div>
-              <div className="pokeball-button"></div>
+            <div className={`radar ${animState === 'open' ? 'locked' : ''}`} aria-hidden="true">
+              <span className="radar-sweep" />
+              <span className="radar-blip" />
             </div>
+            <p className={`radar-text ${animState === 'open' ? 'locked' : ''}`} role="status">
+              {animState === 'open' ? 'Pokémon localizado!' : 'Escaneando...'}
+            </p>
           </div>
         )}
 
