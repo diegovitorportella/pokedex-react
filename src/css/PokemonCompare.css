@@ -7,6 +7,7 @@
   height: 30px;
   border: 2px solid var(--border-color);
   border-radius: 50%;
+  padding: 0;
   background: var(--panel-bg);
   color: var(--text-main);
   display: grid;

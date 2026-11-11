@@ -52,10 +52,16 @@
   border-radius: 50%;
   width: 30px;
   height: 30px;
+  padding: 0; /* o padding padrão do botão deslocava o ícone */
   display: grid;
   place-items: center;
   z-index: 10;
   transition: transform 0.15s, border-color 0.15s;
+}
+
+.favorite-btn svg,
+.compare-btn svg {
+  display: block;
 }
 
 .favorite-btn:hover {
